@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <title>Github Querry</title>
+</head>
+<body style="
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+"
+>
+    <h1>Search For Github User</h1>
+    <input id="input" placeholder="Github Username"/> 
+    <button id="submit">Submit</button>
+
+    <h1 id="h1" >Results</h1>
+    <div  id="results">
+
+    </div>
+
+    <style>
+        #input {
+            width: 50%;
+            margin-bottom: 10px;
+        }
+        #submit {
+            width: 51%;
+        }
+        #results{
+            width: 50%;
+            padding: 50px;
+            background-color: rgb(247, 247, 247);
+            border-radius: 10px;
+        }
+    </style>
+</body>
+</html>
+
+<!-- Javascript Code -->
+<script>
+
+    let user;
+
+    document.getElementById("submit")
+    .addEventListener("click", () => {
+
+        // Grab Input
+        let username = document.getElementById("input").value
+
+        // Request
+        fetch(`https://api.github.com/users/${username}`, {method: "GET",})
+        .then(res => res.json())
+        .then((data) => {
+            console.log(data.login);
+            user = data; // User data object
+        })
+        .catch((err) => {console.log(err)})
+
+        // Display Results
+        if(user.login == undefined) { // If user is not found
+            document.getElementById("results").innerHTML = `
+                <h1>Not Found</h1>
+            `
+        } 
+        else { // if user is found
+        document.getElementById("results").innerHTML = `
+        <image width="200px" height="200px" style="border-radius:100%"" src="${user.avatar_url}"/>
+        <h1>Followers: ${user.followers}</h1>
+        <h1>Following: ${user.following}</h1>
+        <a href="${user.html_url}" >GitHub Page</a>
+        `;
+    }})
+</script>
